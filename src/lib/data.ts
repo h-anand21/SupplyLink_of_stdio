@@ -263,7 +263,7 @@ export const mockProducts: Product[] = [
     price: 18.00,
     quantity: 80,
     availability: true,
-    imageUrl: 'https://placehold.co/400x400.png',
+    imageUrl: 'https://images.unsplash.com/photo-1657600704994-ea5020a66231?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMXx8UGFja2FnZWQlMjBNYW5nbyUyMEp1aWNlJTIwJTI4MUwlMjB4JTIwNiUyOXxlbnwwfHx8fDE3NTM2MzU1MTR8MA&ixlib=rb-4.1.0&q=80&w=1080',
     imageHint: 'juice carton',
     supplierId: 'sup-1',
     supplierName: 'FarmFresh Co.',
@@ -283,3 +283,6 @@ export const mockUser: User = {
 
 
 
+
+
+    
