@@ -188,7 +188,7 @@ export const mockProducts: Product[] = [
     price: 22.00,
     quantity: 90,
     availability: false,
-    imageUrl: 'https://images.unsplash.com/photo-1671778440118-4bc5eced58e7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxBc3NhbSUyMFRlYSUyMExlYXZlcyUyMHxlbnwwfHx8fDE3NTM2MzUwNDV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    imageUrl: 'https://images.unsplash.com/photo-1628153792464-21bffac488d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxUZWElMjBsZWF2ZXN8ZW58MHx8fHwxNzUzNjM1MTYxfDA&ixlib=rb-4.1.0&q=80&w=1080',
     imageHint: 'dried tea',
     supplierId: 'sup-2',
     supplierName: 'Golden Grains',
