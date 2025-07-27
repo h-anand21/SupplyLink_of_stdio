@@ -143,7 +143,7 @@ export const mockProducts: Product[] = [
     price: 12.00,
     quantity: 150,
     availability: true,
-    imageUrl: 'https://placehold.co/400x400.png',
+    imageUrl: 'https://images.unsplash.com/photo-1560806863-6ccdecaf1dc5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxCYWxscG9pbnQlMjBQZW5zJTIwJTI4Qm94JTIwb2YlMjA1MCUyOXxlbnwwfHx8fDE3NTM2MzUyNjl8MA&ixlib=rb-4.1.0&q=80&w=1080',
     imageHint: 'pen box',
     supplierId: 'sup-4',
     supplierName: 'Office Essentials',
@@ -173,7 +173,7 @@ export const mockProducts: Product[] = [
     price: 18.75,
     quantity: 75,
     availability: true,
-    imageUrl: 'https://placehold.co/400x400.png',
+    imageUrl: 'https://images.unsplash.com/photo-1587937533577-0ba337fbd436?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxBbGwtUHVycG9zZSUyMENsZWFuZXJ8ZW58MHx8fHwxNzUzNjM1Mjk4fDA&ixlib=rb-4.1.0&q=80&w=1080',
     imageHint: 'cleaning spray',
     supplierId: 'sup-4',
     supplierName: 'Office Essentials',
@@ -280,4 +280,5 @@ export const mockUser: User = {
     role: 'vendor',
     avatarUrl: 'https://i.pravatar.cc/150?u=user-1'
 };
+
 
