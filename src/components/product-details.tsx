@@ -36,7 +36,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
             <CardContent className="p-6">
                 <div className="flex justify-between items-start gap-4">
                     <div>
-                        <p className="text-3xl font-bold font-headline">${product.price.toFixed(2)}</p>
+                        <p className="text-3xl font-bold font-headline">₹{product.price.toFixed(2)}</p>
                         <p className="text-sm text-muted-foreground">per unit</p>
                     </div>
                     <Button size="lg" disabled={!product.availability} onClick={handleAddToCart}>

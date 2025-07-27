@@ -188,7 +188,7 @@ export default function OrdersPage() {
                     <TableCell>
                       <Badge variant={getStatusVariant(order.status)}>{order.status}</Badge>
                     </TableCell>
-                    <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{order.total.toFixed(2)}</TableCell>
                     <TableCell className="text-right">
                         {order.status === 'Draft' ? (
                           <Button size="sm" onClick={handlePlaceOrder}>Place Order</Button>
@@ -252,8 +252,8 @@ export default function OrdersPage() {
                                 <TableRow key={item.id}>
                                     <TableCell>{item.name}</TableCell>
                                     <TableCell>{item.quantity}</TableCell>
-                                    <TableCell className="text-right">${item.price.toFixed(2)}</TableCell>
-                                    <TableCell className="text-right">${(item.quantity * item.price).toFixed(2)}</TableCell>
+                                    <TableCell className="text-right">₹{item.price.toFixed(2)}</TableCell>
+                                    <TableCell className="text-right">₹{(item.quantity * item.price).toFixed(2)}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -261,7 +261,7 @@ export default function OrdersPage() {
                 </div>
                 <div className="flex justify-end items-center font-bold text-lg mt-2">
                     <span className="mr-4">Total:</span>
-                    <span>${selectedOrder.total.toFixed(2)}</span>
+                    <span>₹{selectedOrder.total.toFixed(2)}</span>
                 </div>
             </div>
           )}

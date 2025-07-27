@@ -84,7 +84,7 @@ export default function DashboardProductsPage() {
                             {product.availability ? 'Available' : 'Out of Stock'}
                         </Badge>
                     </TableCell>
-                    <TableCell>${product.price.toFixed(2)}</TableCell>
+                    <TableCell>₹{product.price.toFixed(2)}</TableCell>
                     <TableCell className="hidden md:table-cell">
                         {product.quantity}
                     </TableCell>

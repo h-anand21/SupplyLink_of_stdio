@@ -45,7 +45,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       </CardContent>
       <CardFooter className="p-4 pt-0 flex justify-between items-center">
-        <div className="text-2xl font-bold font-headline">${product.price.toFixed(2)}</div>
+        <div className="text-2xl font-bold font-headline">₹{product.price.toFixed(2)}</div>
         <div className="flex items-center gap-1">
             <Star className="w-5 h-5 fill-primary text-primary" />
             <span className="font-semibold">{product.rating.toFixed(1)}</span>

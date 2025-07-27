@@ -98,7 +98,7 @@ export default function DashboardOrdersPage() {
                             <TableCell>
                             <Badge variant={getStatusVariant(order.status)}>{order.status}</Badge>
                             </TableCell>
-                            <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
+                            <TableCell className="text-right">₹{order.total.toFixed(2)}</TableCell>
                             <TableCell className="text-right">
                                 {order.status === 'Pending' && (
                                     <Button variant="outline" size="sm">
