@@ -1,29 +1,33 @@
+
+"use client";
+
 import React from 'react';
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Star, Truck, ShoppingCart } from "lucide-react";
-import { mockProducts } from "@/lib/data";
-import { Button } from "@/components/ui/button";
+import { Star } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ReviewSummary } from "@/components/review-summary";
 import type { Review } from "@/lib/types";
 import { ProductDetails } from '@/components/product-details';
+import { useProducts } from '@/context/product-context';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const product = mockProducts.find((p) => p.id === params.id);
+  const { products } = useProducts();
+  const product = products.find((p) => p.id === params.id);
 
   if (!product) {
-    notFound();
+    // You might want to show a loading state here if products are loading
+    // For now, we'll just show a basic skeleton
+    return <ProductSkeleton />;
   }
 
   const renderStars = (rating: number) => {
@@ -40,7 +44,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   return (
     <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
       <div className="flex flex-col gap-6">
-        <Card className="overflow-hidden">
+        <div className="overflow-hidden rounded-lg border">
           <Image
             alt={product.name}
             className="aspect-square w-full object-cover"
@@ -49,7 +53,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             width="600"
             data-ai-hint={product.imageHint}
           />
-        </Card>
+        </div>
       </div>
 
       <div className="flex flex-col gap-6">
@@ -111,4 +115,24 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
       </div>
     </div>
   );
+}
+
+function ProductSkeleton() {
+  return (
+    <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+      <div className="flex flex-col gap-6">
+        <Skeleton className="aspect-square w-full rounded-lg" />
+      </div>
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-2">
+            <Skeleton className="h-6 w-24 rounded-full" />
+            <Skeleton className="h-10 w-3/4 rounded-md" />
+            <Skeleton className="h-5 w-1/2 rounded-md" />
+            <Skeleton className="h-6 w-1/3 rounded-md" />
+        </div>
+        <Skeleton className="h-32 w-full rounded-lg" />
+        <Skeleton className="h-24 w-full rounded-lg" />
+      </div>
+    </div>
+  )
 }

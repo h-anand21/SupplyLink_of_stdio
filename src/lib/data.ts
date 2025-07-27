@@ -276,7 +276,7 @@ export const mockProducts: Product[] = [
 export const mockUser: User = {
     id: 'user-1',
     name: 'Taco King',
-    email: 'hello@tacoking.com',
+    email: 'vendor@example.com',
     role: 'vendor',
     avatarUrl: 'https://i.pravatar.cc/150?u=user-1'
 };

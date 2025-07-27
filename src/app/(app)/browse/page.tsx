@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -9,18 +10,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ProductCard } from "@/components/product-card";
-import { mockProducts } from "@/lib/data";
 import type { Product } from "@/lib/types";
+import { useProducts } from "@/context/product-context";
 
 export default function BrowsePage() {
+  const { products: allProducts } = useProducts();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("rating");
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
 
-  const categories = [...new Set(mockProducts.map((p) => p.category))];
+  const categories = [...new Set(allProducts.map((p) => p.category))];
 
   useEffect(() => {
-    let products = [...mockProducts];
+    let products = [...allProducts];
 
     // Filter by category
     if (selectedCategory !== "all") {
@@ -37,7 +39,7 @@ export default function BrowsePage() {
     }
 
     setDisplayedProducts(products);
-  }, [selectedCategory, sortBy]);
+  }, [selectedCategory, sortBy, allProducts]);
 
   return (
     <>

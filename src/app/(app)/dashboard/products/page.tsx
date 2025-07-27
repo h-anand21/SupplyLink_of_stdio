@@ -48,17 +48,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { mockProducts } from "@/lib/data"
+import { useProducts } from "@/context/product-context";
 import type { Product } from "@/lib/types";
-
-const initialSupplierProducts = mockProducts.filter(p => p.supplierId === 'sup-1');
 
 const EMPTY_PRODUCT_FORM = {
     name: '',
@@ -72,7 +69,8 @@ const EMPTY_PRODUCT_FORM = {
 };
 
 export default function DashboardProductsPage() {
-    const [products, setProducts] = useState<Product[]>(initialSupplierProducts);
+    const { getSupplierProducts, addProduct, updateProduct, deleteProduct } = useProducts();
+    const products = getSupplierProducts('sup-1');
     const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState<Product | null>(null);
@@ -119,7 +117,7 @@ export default function DashboardProductsPage() {
     const handleSubmitProduct = () => {
         if (isEditing && editingProduct) {
             // Update existing product
-            setProducts(prev => prev.map(p => p.id === editingProduct.id ? { ...editingProduct, ...productFormData, price: Number(productFormData.price), quantity: Number(productFormData.quantity) } : p));
+            updateProduct({ ...editingProduct, ...productFormData, price: Number(productFormData.price), quantity: Number(productFormData.quantity) });
         } else {
             // Add new product
             const newProduct: Product = {
@@ -132,7 +130,7 @@ export default function DashboardProductsPage() {
                 supplierId: 'sup-1',
                 supplierName: 'FarmFresh Co.'
             };
-            setProducts(prev => [newProduct, ...prev]);
+            addProduct(newProduct);
         }
         handleCloseDialog();
     }
@@ -144,7 +142,7 @@ export default function DashboardProductsPage() {
 
     const handleConfirmDelete = () => {
         if (productToDelete) {
-            setProducts(prev => prev.filter(p => p.id !== productToDelete.id));
+            deleteProduct(productToDelete.id);
         }
         setIsDeleteDialogOpen(false);
         setProductToDelete(null);
