@@ -17,9 +17,6 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Link from "next/link";
 import type { Role } from "@/lib/types";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -65,49 +62,28 @@ export default function SignupPage() {
     return true;
   }
 
-  const handleCreateAccount = async () => {
+  const handleCreateAccount = () => {
     if (!validateForm()) return;
-
     setIsLoading(true);
-    try {
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
-      const uid = userCred.user.uid;
 
-      // Save user role in Firestore
-      await setDoc(doc(db, "users", uid), {
-        name,
-        email,
-        role,
-        createdAt: new Date()
-      });
+    // Mock signup logic
+    // Store role in localStorage to simulate session
+    localStorage.setItem('userRole', role);
 
-      toast({
-        title: "Account Created!",
-        description: "Welcome to VendorLink Express.",
-      });
+    toast({
+      title: "Account Created!",
+      description: "Welcome to VendorLink Express.",
+    });
 
-      // Redirect to dashboard based on role
-      if (role === "supplier") {
-        router.push("/dashboard");
-      } else {
-        router.push("/browse");
-      }
-    } catch (error: any) {
-      console.error("Signup Error: ", error);
-      let errorMessage = "An unexpected error occurred.";
-      if (error.code === 'auth/email-already-in-use') {
-        errorMessage = "This email address is already in use.";
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      toast({
-        title: "Signup Failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
+    // Redirect to dashboard based on role
+    setTimeout(() => {
+        if (role === "supplier") {
+            router.push("/dashboard");
+        } else {
+            router.push("/browse");
+        }
         setIsLoading(false);
-    }
+    }, 1000)
   };
 
   return (

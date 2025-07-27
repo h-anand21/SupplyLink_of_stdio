@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,11 +15,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff } from "lucide-react";
+import type { Role } from "@/lib/types";
 
 // Basic email regex
 const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -31,6 +29,11 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Clear mock auth on load
+    localStorage.removeItem('userRole');
+  }, []);
 
   const validateForm = () => {
     if (!emailRegex.test(email)) {
@@ -52,49 +55,34 @@ export default function LoginPage() {
     return true;
   }
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     if (!validateForm()) return;
-
     setIsLoading(true);
-    try {
-      const userCred = await signInWithEmailAndPassword(auth, email, password);
-      const uid = userCred.user.uid;
 
-      const docSnap = await getDoc(doc(db, "users", uid));
-
-      if (!docSnap.exists()) {
-        throw new Error("No user role found.");
-      }
-      
-      const role = docSnap.data()?.role;
-
-      toast({
-        title: "Signed In!",
-        description: "Welcome back.",
-      });
-
-      if (role === "supplier") {
-        router.push("/dashboard");
-      } else {
-        router.push("/browse");
-      }
-
-    } catch (error: any) {
-      console.error("Login Error: ", error);
-      let errorMessage = "Please check your credentials.";
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-        errorMessage = "Invalid email or password.";
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      toast({
-        title: "Login Failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-        setIsLoading(false);
+    // Mock login logic
+    // We'll use the email to determine the role for this mock.
+    // 'vendor@example.com' for vendor, 'supplier@example.com' for supplier
+    let role: Role = 'vendor';
+    if (email.startsWith('supplier')) {
+      role = 'supplier';
     }
+
+    // Store role in localStorage to simulate session
+    localStorage.setItem('userRole', role);
+
+    toast({
+      title: "Signed In!",
+      description: "Welcome back.",
+    });
+
+    setTimeout(() => {
+        if (role === "supplier") {
+            router.push("/dashboard");
+        } else {
+            router.push("/browse");
+        }
+        setIsLoading(false);
+    }, 1000);
   };
 
 
@@ -103,13 +91,13 @@ export default function LoginPage() {
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl">Welcome back</CardTitle>
         <CardDescription>
-          Enter your email and password to sign in to your account.
+          Use `vendor@example.com` or `supplier@example.com` to sign in.
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input id="email" type="email" placeholder="vendor@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
