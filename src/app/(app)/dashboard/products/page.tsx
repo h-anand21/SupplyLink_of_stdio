@@ -3,7 +3,7 @@
 
 import Image from "next/image"
 import { MoreHorizontal } from "lucide-react"
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -39,6 +39,18 @@ import {
     DialogFooter,
     DialogClose,
   } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -48,53 +60,94 @@ import type { Product } from "@/lib/types";
 
 const initialSupplierProducts = mockProducts.filter(p => p.supplierId === 'sup-1');
 
+const EMPTY_PRODUCT_FORM = {
+    name: '',
+    category: '',
+    price: 0,
+    quantity: 0,
+    availability: true,
+    imageUrl: 'https://placehold.co/400x400.png',
+    imageHint: 'new product',
+    description: '',
+};
+
 export default function DashboardProductsPage() {
     const [products, setProducts] = useState<Product[]>(initialSupplierProducts);
-    const [isAddProductOpen, setIsAddProductOpen] = useState(false);
-    const [newProduct, setNewProduct] = useState<Omit<Product, 'id' | 'reviews' | 'rating' | 'supplierId' | 'supplierName'>>({
-        name: '',
-        category: '',
-        price: 0,
-        quantity: 0,
-        availability: true,
-        imageUrl: 'https://placehold.co/400x400.png',
-        imageHint: 'new product',
-        description: '',
-    });
+    const [isProductDialogOpen, setIsProductDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+    const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+    const [productFormData, setProductFormData] = useState<Omit<Product, 'id' | 'reviews' | 'rating' | 'supplierId' | 'supplierName'>>(EMPTY_PRODUCT_FORM);
+
+    const isEditing = useMemo(() => !!editingProduct, [editingProduct]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { id, value } = e.target;
-        setNewProduct(prev => ({ ...prev, [id]: value }));
+        setProductFormData(prev => ({ ...prev, [id]: value }));
     };
 
     const handleSelectChange = (value: string) => {
-        setNewProduct(prev => ({ ...prev, category: value }));
+        setProductFormData(prev => ({ ...prev, category: value }));
     }
 
-    const handleAddProduct = () => {
-        const productToAdd: Product = {
-            ...newProduct,
-            id: `prod-${Math.random().toString(36).substr(2, 9)}`,
-            price: Number(newProduct.price),
-            quantity: Number(newProduct.quantity),
-            reviews: [],
-            rating: 0,
-            supplierId: 'sup-1',
-            supplierName: 'FarmFresh Co.'
-        };
-        setProducts(prev => [productToAdd, ...prev]);
-        setIsAddProductOpen(false);
-        // Reset form
-        setNewProduct({
-            name: '',
-            category: '',
-            price: 0,
-            quantity: 0,
-            availability: true,
-            imageUrl: 'https://placehold.co/400x400.png',
-            imageHint: 'new product',
-            description: '',
-        });
+    const handleOpenDialog = (product: Product | null) => {
+        if (product) {
+            setEditingProduct(product);
+            setProductFormData({
+                name: product.name,
+                category: product.category,
+                price: product.price,
+                quantity: product.quantity,
+                availability: product.availability,
+                imageUrl: product.imageUrl,
+                imageHint: product.imageHint,
+                description: product.description,
+            });
+        } else {
+            setEditingProduct(null);
+            setProductFormData(EMPTY_PRODUCT_FORM);
+        }
+        setIsProductDialogOpen(true);
+    }
+    
+    const handleCloseDialog = () => {
+        setIsProductDialogOpen(false);
+        setEditingProduct(null);
+        setProductFormData(EMPTY_PRODUCT_FORM);
+    }
+
+    const handleSubmitProduct = () => {
+        if (isEditing && editingProduct) {
+            // Update existing product
+            setProducts(prev => prev.map(p => p.id === editingProduct.id ? { ...editingProduct, ...productFormData, price: Number(productFormData.price), quantity: Number(productFormData.quantity) } : p));
+        } else {
+            // Add new product
+            const newProduct: Product = {
+                ...productFormData,
+                id: `prod-${Math.random().toString(36).substr(2, 9)}`,
+                price: Number(productFormData.price),
+                quantity: Number(productFormData.quantity),
+                reviews: [],
+                rating: 0,
+                supplierId: 'sup-1',
+                supplierName: 'FarmFresh Co.'
+            };
+            setProducts(prev => [newProduct, ...prev]);
+        }
+        handleCloseDialog();
+    }
+
+    const handleDeleteClick = (product: Product) => {
+        setProductToDelete(product);
+        setIsDeleteDialogOpen(true);
+    };
+
+    const handleConfirmDelete = () => {
+        if (productToDelete) {
+            setProducts(prev => prev.filter(p => p.id !== productToDelete.id));
+        }
+        setIsDeleteDialogOpen(false);
+        setProductToDelete(null);
     }
 
 
@@ -110,7 +163,7 @@ export default function DashboardProductsPage() {
                         Manage your products and view their sales performance.
                         </CardDescription>
                     </div>
-                    <Button onClick={() => setIsAddProductOpen(true)}>Add New Product</Button>
+                    <Button onClick={() => handleOpenDialog(null)}>Add New Product</Button>
                 </div>
             </CardHeader>
             <CardContent>
@@ -170,8 +223,8 @@ export default function DashboardProductsPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleOpenDialog(product)}>Edit</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleDeleteClick(product)} className="text-destructive">Delete</DropdownMenuItem>
                         </DropdownMenuContent>
                         </DropdownMenu>
                     </TableCell>
@@ -183,22 +236,23 @@ export default function DashboardProductsPage() {
             </Card>
         </main>
 
-        <Dialog open={isAddProductOpen} onOpenChange={setIsAddProductOpen}>
+        {/* Add/Edit Product Dialog */}
+        <Dialog open={isProductDialogOpen} onOpenChange={handleCloseDialog}>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Add New Product</DialogTitle>
+                    <DialogTitle>{isEditing ? 'Edit Product' : 'Add New Product'}</DialogTitle>
                     <DialogDescription>
-                        Fill in the details below to add a new product to your inventory.
+                        {isEditing ? 'Update the details for this product.' : 'Fill in the details below to add a new product.'}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="name" className="text-right">Name</Label>
-                        <Input id="name" value={newProduct.name} onChange={handleInputChange} className="col-span-3" placeholder="e.g., Fresh Tomatoes"/>
+                        <Input id="name" value={productFormData.name} onChange={handleInputChange} className="col-span-3" placeholder="e.g., Fresh Tomatoes"/>
                     </div>
                      <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="category" className="text-right">Category</Label>
-                         <Select onValueChange={handleSelectChange} value={newProduct.category}>
+                         <Select onValueChange={handleSelectChange} value={productFormData.category}>
                             <SelectTrigger className="col-span-3">
                                 <SelectValue placeholder="Select a category" />
                             </SelectTrigger>
@@ -214,25 +268,43 @@ export default function DashboardProductsPage() {
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="price" className="text-right">Price (₹)</Label>
-                        <Input id="price" type="number" value={newProduct.price} onChange={handleInputChange} className="col-span-3" />
+                        <Input id="price" type="number" value={productFormData.price} onChange={handleInputChange} className="col-span-3" />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="quantity" className="text-right">Stock</Label>
-                        <Input id="quantity" type="number" value={newProduct.quantity} onChange={handleInputChange} className="col-span-3" />
+                        <Input id="quantity" type="number" value={productFormData.quantity} onChange={handleInputChange} className="col-span-3" />
                     </div>
                      <div className="grid grid-cols-4 items-start gap-4">
                         <Label htmlFor="description" className="text-right pt-2">Description</Label>
-                        <Textarea id="description" value={newProduct.description} onChange={handleInputChange} className="col-span-3" placeholder="A short description of the product."/>
+                        <Textarea id="description" value={productFormData.description} onChange={handleInputChange} className="col-span-3" placeholder="A short description of the product."/>
                     </div>
                 </div>
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button type="button" variant="outline">Cancel</Button>
                     </DialogClose>
-                    <Button type="submit" onClick={handleAddProduct}>Add Product</Button>
+                    <Button type="submit" onClick={handleSubmitProduct}>{isEditing ? 'Save Changes' : 'Add Product'}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete the
+                    product "{productToDelete?.name}".
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setProductToDelete(null)}>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleConfirmDelete}>Continue</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
         </>
     )
-}
+
+    
