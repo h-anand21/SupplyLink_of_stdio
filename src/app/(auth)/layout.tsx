@@ -1,4 +1,4 @@
-import { VendorLinkLogo } from "@/components/icons";
+import { SupplyLinkLogo } from "@/components/icons";
 import Link from "next/link";
 
 export default function AuthLayout({
@@ -11,8 +11,8 @@ export default function AuthLayout({
         <div className="w-full max-w-sm">
             <div className="mb-6 flex justify-center">
                 <Link href="/" className="flex items-center gap-2">
-                    <VendorLinkLogo className="h-10 w-10 text-primary" />
-                    <span className="text-2xl font-bold font-headline">VendorLink Express</span>
+                    <SupplyLinkLogo className="h-10 w-10 text-primary" />
+                    <span className="text-2xl font-bold font-headline">SupplyLink</span>
                 </Link>
             </div>
             {children}

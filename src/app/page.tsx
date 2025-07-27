@@ -3,15 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, Package, Star, Truck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { VendorLinkLogo } from '@/components/icons';
+import { SupplyLinkLogo } from '@/components/icons';
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <header className="container mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <VendorLinkLogo className="h-8 w-8 text-primary" />
-          <h1 className="text-2xl font-bold font-headline">VendorLink Express</h1>
+          <SupplyLinkLogo className="h-8 w-8 text-primary" />
+          <h1 className="text-2xl font-bold font-headline">SupplyLink</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" asChild>
@@ -30,7 +30,7 @@ export default function Home() {
               Fresh Supplies, Delivered Fast.
             </h2>
             <p className="mt-6 text-lg md:text-xl text-muted-foreground">
-              VendorLink Express connects street food vendors with trusted suppliers for quality raw materials, seamless ordering, and reliable delivery.
+              SupplyLink connects street food vendors with trusted suppliers for quality raw materials, seamless ordering, and reliable delivery.
             </p>
             <div className="mt-8 flex justify-center gap-4">
               <Button size="lg" asChild>
@@ -132,7 +132,7 @@ export default function Home() {
 
       <footer className="bg-card border-t">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} VendorLink Express. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} SupplyLink. All rights reserved.</p>
         </div>
       </footer>
     </div>

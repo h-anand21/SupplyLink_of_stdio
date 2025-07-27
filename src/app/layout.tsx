@@ -11,7 +11,7 @@ const ptSans = PT_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'VendorLink Express',
+  title: 'SupplyLink',
   description: 'Connecting street food vendors with trusted suppliers.',
 };
 

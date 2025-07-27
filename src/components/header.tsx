@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { VendorLinkLogo } from "./icons"
+import { SupplyLinkLogo } from "./icons"
 
 export function Header() {
   // Mock user role. In a real app, this would come from an auth context.
@@ -44,8 +44,8 @@ export function Header() {
           href="/browse"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <VendorLinkLogo className="h-6 w-6 text-primary" />
-          <span className="sr-only">VendorLink Express</span>
+          <SupplyLinkLogo className="h-6 w-6 text-primary" />
+          <span className="sr-only">SupplyLink</span>
         </Link>
         {navLinks.map((link) => (
              <Link
@@ -74,8 +74,8 @@ export function Header() {
               href="#"
               className="flex items-center gap-2 text-lg font-semibold"
             >
-              <VendorLinkLogo className="h-6 w-6 text-primary" />
-              <span className="sr-only">VendorLink Express</span>
+              <SupplyLinkLogo className="h-6 w-6 text-primary" />
+              <span className="sr-only">SupplyLink</span>
             </Link>
             {navLinks.map((link) => (
              <Link
