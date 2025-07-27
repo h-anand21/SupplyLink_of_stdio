@@ -35,14 +35,17 @@ export type Review = {
 
 export type OrderStatus = 'Pending' | 'Approved' | 'Shipped' | 'Delivered' | 'Cancelled' | 'Draft';
 
-export type OrderItem = Product & {
+export type OrderItem = {
+  productId: string;
+  productName: string;
   quantity: number;
+  price: number;
 };
 
 export type Order = {
   id: string;
   vendorId: string;
-  items: OrderItem[];
+  items: (Product & { quantity: number; })[] | OrderItem[];
   total: number;
   status: OrderStatus;
   orderDate: string;
