@@ -76,7 +76,7 @@ export default function Home() {
                 </ul>
               </div>
               <div className="relative h-80 rounded-lg overflow-hidden shadow-xl">
-                 <Image src="https://placehold.co/600x400.png" alt="Street food vendor" layout="fill" objectFit="cover" data-ai-hint="street food" />
+                 <Image src="https://placehold.co/600x400.png" alt="Street food vendor" layout="fill" objectFit="cover" data-ai-hint="food vendor" />
               </div>
             </div>
           </div>

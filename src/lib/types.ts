@@ -16,6 +16,7 @@ export type Product = {
   quantity: number;
   availability: boolean;
   imageUrl: string;
+  imageHint: string;
   supplierId: string;
   supplierName: string;
   description: string;
