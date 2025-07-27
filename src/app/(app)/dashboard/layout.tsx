@@ -1,3 +1,6 @@
+
+'use client';
+
 import Link from "next/link"
 import {
   Bell,
@@ -16,12 +19,28 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useAuthRole } from "@/hooks/useAuthRole";
+import { useRouter } from "next/navigation";
+
 
 export default function DashboardLayout({
     children,
   }: {
     children: React.ReactNode;
   }) {
+    const { role, loading } = useAuthRole();
+    const router = useRouter();
+
+    if (loading) {
+      return <div>Loading...</div>; // Or a proper skeleton loader
+    }
+
+    // Protect the route for suppliers only
+    if (role !== 'supplier') {
+        router.push('/browse'); // Redirect non-suppliers
+        return null;
+    }
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-card md:block">

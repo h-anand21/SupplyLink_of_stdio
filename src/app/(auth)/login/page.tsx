@@ -21,6 +21,9 @@ import { auth, db } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff } from "lucide-react";
 
+// Basic email regex
+const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,7 +32,29 @@ export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
 
+  const validateForm = () => {
+    if (!emailRegex.test(email)) {
+        toast({
+            title: "Invalid Email",
+            description: "Please enter a valid email address.",
+            variant: "destructive",
+        });
+        return false;
+    }
+    if (!password) {
+        toast({
+            title: "Password Required",
+            description: "Please enter your password.",
+            variant: "destructive",
+        });
+        return false;
+    }
+    return true;
+  }
+
   const handleLogin = async () => {
+    if (!validateForm()) return;
+
     setIsLoading(true);
     try {
       const userCred = await signInWithEmailAndPassword(auth, email, password);
@@ -56,9 +81,15 @@ export default function LoginPage() {
 
     } catch (error: any) {
       console.error("Login Error: ", error);
+      let errorMessage = "Please check your credentials.";
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        errorMessage = "Invalid email or password.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
       toast({
         title: "Login Failed",
-        description: error.message || "Please check your credentials.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -83,7 +114,7 @@ export default function LoginPage() {
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
           <div className="relative">
-            <Input id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleLogin()} />
             <Button
               type="button"
               variant="ghost"

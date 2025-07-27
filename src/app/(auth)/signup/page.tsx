@@ -23,6 +23,9 @@ import { auth, db } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff } from "lucide-react";
 
+// Basic email regex
+const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
 
 export default function SignupPage() {
   const [role, setRole] = useState<Role>("vendor");
@@ -34,7 +37,37 @@ export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
 
+  const validateForm = () => {
+    if (!name) {
+      toast({
+        title: "Name Required",
+        description: "Please enter your name or your business name.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    if (password.length < 6) {
+      toast({
+        title: "Password Too Short",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    return true;
+  }
+
   const handleCreateAccount = async () => {
+    if (!validateForm()) return;
+
     setIsLoading(true);
     try {
       const userCred = await createUserWithEmailAndPassword(auth, email, password);
@@ -50,7 +83,7 @@ export default function SignupPage() {
 
       toast({
         title: "Account Created!",
-        description: "Welcome to SupplyLink.",
+        description: "Welcome to VendorLink Express.",
       });
 
       // Redirect to dashboard based on role
@@ -61,9 +94,15 @@ export default function SignupPage() {
       }
     } catch (error: any) {
       console.error("Signup Error: ", error);
+      let errorMessage = "An unexpected error occurred.";
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = "This email address is already in use.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
       toast({
         title: "Signup Failed",
-        description: error.message || "An unexpected error occurred.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -119,7 +158,7 @@ export default function SignupPage() {
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
           <div className="relative">
-            <Input id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && handleCreateAccount()} />
              <Button
               type="button"
               variant="ghost"
