@@ -29,7 +29,7 @@ export function ProductCard({ product }: ProductCardProps) {
             height="225"
             src={product.imageUrl}
             width="400"
-            data-ai-hint="product image"
+            data-ai-hint={product.category}
             />
         </Link>
         {!product.availability && (

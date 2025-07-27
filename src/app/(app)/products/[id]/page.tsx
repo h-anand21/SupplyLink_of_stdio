@@ -45,7 +45,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             height="600"
             src={product.imageUrl}
             width="600"
-            data-ai-hint="product image"
+            data-ai-hint={product.category}
           />
         </Card>
       </div>
