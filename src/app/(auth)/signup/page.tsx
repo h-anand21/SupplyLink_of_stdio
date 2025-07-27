@@ -1,3 +1,8 @@
+
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,8 +16,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Link from "next/link";
+import type { Role } from "@/lib/types";
 
 export default function SignupPage() {
+  const [role, setRole] = useState<Role>("vendor");
+  const router = useRouter();
+
+  const handleCreateAccount = () => {
+    // In a real app, you would handle user creation here.
+    // We'll just navigate based on the selected role.
+    if (role === 'supplier') {
+      router.push('/dashboard');
+    } else {
+      router.push('/browse');
+    }
+  };
+
   return (
     <Card>
       <CardHeader className="space-y-1">
@@ -24,7 +43,11 @@ export default function SignupPage() {
       <CardContent className="grid gap-4">
         <div className="grid gap-2">
             <Label>I am a...</Label>
-            <RadioGroup defaultValue="vendor" className="grid grid-cols-2 gap-4">
+            <RadioGroup 
+              defaultValue="vendor" 
+              className="grid grid-cols-2 gap-4"
+              onValueChange={(value: Role) => setRole(value)}
+            >
                 <div>
                     <RadioGroupItem value="vendor" id="vendor" className="peer sr-only" />
                     <Label
@@ -59,7 +82,7 @@ export default function SignupPage() {
         </div>
       </CardContent>
       <CardFooter className="flex flex-col gap-4">
-        <Button className="w-full" asChild><Link href="/browse">Create Account</Link></Button>
+        <Button className="w-full" onClick={handleCreateAccount}>Create Account</Button>
         <div className="text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link href="/login" className="underline hover:text-primary">
