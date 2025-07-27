@@ -280,9 +280,3 @@ export const mockUser: User = {
     role: 'vendor',
     avatarUrl: 'https://i.pravatar.cc/150?u=user-1'
 };
-
-
-
-
-
-    
