@@ -24,7 +24,7 @@ import { SupplyLinkLogo } from "./icons"
 export function Header() {
   const router = useRouter();
   // Mock user role. In a real app, this would come from an auth context.
-  const userRole = 'vendor'; 
+  const userRole = 'supplier'; 
 
   const vendorLinks = [
     { name: "Browse", href: "/browse" },
@@ -119,7 +119,9 @@ export function Header() {
             <DropdownMenuItem asChild>
               <Link href="/profile">Profile</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/support">Support</Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
