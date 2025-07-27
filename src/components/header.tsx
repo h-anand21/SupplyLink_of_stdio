@@ -24,7 +24,7 @@ import { SupplyLinkLogo } from "./icons"
 export function Header() {
   const router = useRouter();
   // Mock user role. In a real app, this would come from an auth context.
-  const userRole = 'supplier'; 
+  const userRole = 'vendor'; 
 
   const vendorLinks = [
     { name: "Browse", href: "/browse" },
