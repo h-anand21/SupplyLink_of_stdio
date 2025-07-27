@@ -1,3 +1,8 @@
+
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,8 +15,56 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const handleLogin = async () => {
+    setIsLoading(true);
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      const uid = userCred.user.uid;
+
+      const docSnap = await getDoc(doc(db, "users", uid));
+
+      if (!docSnap.exists()) {
+        throw new Error("No user role found.");
+      }
+      
+      const role = docSnap.data()?.role;
+
+      toast({
+        title: "Signed In!",
+        description: "Welcome back.",
+      });
+
+      if (role === "supplier") {
+        router.push("/dashboard");
+      } else {
+        router.push("/browse");
+      }
+
+    } catch (error: any) {
+      console.error("Login Error: ", error);
+      toast({
+        title: "Login Failed",
+        description: error.message || "Please check your credentials.",
+        variant: "destructive",
+      });
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
+
   return (
     <Card>
       <CardHeader className="space-y-1">
@@ -23,15 +76,17 @@ export default function LoginPage() {
       <CardContent className="grid gap-4">
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" />
+          <Input id="email" type="email" placeholder="m@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" type="password" />
+          <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
       </CardContent>
       <CardFooter className="flex flex-col gap-4">
-        <Button className="w-full" asChild><Link href="/browse">Sign In</Link></Button>
+        <Button className="w-full" onClick={handleLogin} disabled={isLoading}>
+            {isLoading ? 'Signing In...' : 'Sign In'}
+        </Button>
         <div className="text-sm text-muted-foreground">
             Don't have an account?{" "}
             <Link href="/signup" className="underline hover:text-primary">
