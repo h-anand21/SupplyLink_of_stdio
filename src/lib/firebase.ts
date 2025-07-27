@@ -4,12 +4,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "...",
-  authDomain: "...",
-  projectId: "...",
-  storageBucket: "...",
-  messagingSenderId: "...",
-  appId: "..."
+  "projectId": "vendorlink-express",
+  "appId": "1:736195419280:web:6a413604bc3ca30603cc15",
+  "storageBucket": "vendorlink-express.firebasestorage.app",
+  "apiKey": "AIzaSyBnmSgC-6XGhrKf556-GT-xYye5YLuCSac",
+  "authDomain": "vendorlink-express.firebaseapp.com",
+  "messagingSenderId": "736195419280"
 };
 
 // Initialize Firebase
