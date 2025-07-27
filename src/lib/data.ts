@@ -203,7 +203,7 @@ export const mockProducts: Product[] = [
     price: 9.50,
     quantity: 120,
     availability: true,
-    imageUrl: 'https://placehold.co/400x400.png',
+    imageUrl: 'https://images.unsplash.com/photo-1702041295331-840d4d9aa7c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxUdXJtZXJpYyUyMFBvd2RlciUyMCUyODUwMGclMjl8ZW58MHx8fHwxNzUzNjM1MzYxfDA&ixlib=rb-4.1.0&q=80&w=1080',
     imageHint: 'spices powder',
     supplierId: 'sup-2',
     supplierName: 'Golden Grains',
@@ -218,7 +218,7 @@ export const mockProducts: Product[] = [
     price: 15.00,
     quantity: 200,
     availability: true,
-    imageUrl: 'https://placehold.co/400x400.png',
+    imageUrl: 'https://images.unsplash.com/photo-1636014708703-36477b887ee4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxOb3RlYm9va3MlMjAlMjhQYWNrJTIwb2YlMjAxMCUyOXxlbnwwfHx8fDE3NTM2MzUzODN8MA&ixlib=rb-4.1.0&q=80&w=1080',
     imageHint: 'notebooks pile',
     supplierId: 'sup-4',
     supplierName: 'Office Essentials',
@@ -233,7 +233,7 @@ export const mockProducts: Product[] = [
     price: 14.00,
     quantity: 400,
     availability: true,
-    imageUrl: 'https://placehold.co/400x400.png',
+    imageUrl: 'https://images.unsplash.com/photo-1750751860244-defb08e07f00?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxEaXNwb3NhYmxlJTIwQ3VwcyUyMCUyODUwMCUyMHBhY2slMjl8ZW58MHx8fHwxNzUzNjM1NDA2fDA&ixlib=rb-4.1.0&q=80&w=1080',
     imageHint: 'stacked cups',
     supplierId: 'sup-1',
     supplierName: 'FarmFresh Co.',
@@ -248,7 +248,7 @@ export const mockProducts: Product[] = [
     price: 25.00,
     quantity: 100,
     availability: true,
-    imageUrl: 'https://placehold.co/400x400.png',
+    imageUrl: 'https://images.unsplash.com/photo-1727233431893-e38a524d7f4b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyMHx8RGlzaHdhc2hpbmclMjBMaXF1aWQlMjAlMjg1THxlbnwwfHx8fDE3NTM2MzU0Mjh8MA&ixlib=rb-4.1.0&q=80&w=1080',
     imageHint: 'dishwashing soap',
     supplierId: 'sup-4',
     supplierName: 'Office Essentials',
@@ -280,5 +280,6 @@ export const mockUser: User = {
     role: 'vendor',
     avatarUrl: 'https://i.pravatar.cc/150?u=user-1'
 };
+
 
 
