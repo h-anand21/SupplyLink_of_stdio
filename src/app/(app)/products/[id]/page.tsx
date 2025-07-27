@@ -1,6 +1,8 @@
+"use client";
+
 import Image from "next/image";
-import { notFound } from "next/navigation";
-import { Star, Truck } from "lucide-react";
+import { notFound, useRouter } from "next/navigation";
+import { Star, Truck, ShoppingCart } from "lucide-react";
 import { mockProducts } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,13 +18,31 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ReviewSummary } from "@/components/review-summary";
 import type { Review } from "@/lib/types";
+import { useCart } from "@/context/cart-context";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
   const product = mockProducts.find((p) => p.id === params.id);
+  const { addToCart } = useCart();
+  const router = useRouter();
+  const { toast } = useToast();
 
   if (!product) {
     notFound();
   }
+  
+  const handleAddToCart = () => {
+    addToCart(product);
+    toast({
+      title: "Added to Order",
+      description: `${product.name} has been added to your draft order.`,
+      action: (
+        <Button variant="outline" size="sm" onClick={() => router.push('/orders')}>
+          View Order
+        </Button>
+      ),
+    });
+  };
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -75,7 +95,8 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                     <p className="text-3xl font-bold font-headline">${product.price.toFixed(2)}</p>
                     <p className="text-sm text-muted-foreground">per unit</p>
                 </div>
-                <Button size="lg" disabled={!product.availability}>
+                <Button size="lg" disabled={!product.availability} onClick={handleAddToCart}>
+                  <ShoppingCart className="mr-2 h-5 w-5" />
                   {product.availability ? "Add to Order" : "Out of Stock"}
                 </Button>
             </div>

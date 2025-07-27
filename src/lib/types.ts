@@ -32,17 +32,16 @@ export type Review = {
   date: string;
 };
 
-export type OrderStatus = 'Pending' | 'Approved' | 'Shipped' | 'Delivered' | 'Cancelled';
+export type OrderStatus = 'Pending' | 'Approved' | 'Shipped' | 'Delivered' | 'Cancelled' | 'Draft';
+
+export type OrderItem = Product & {
+  quantity: number;
+};
 
 export type Order = {
   id: string;
   vendorId: string;
-  items: {
-    productId: string;
-    productName: string;
-    quantity: number;
-    price: number;
-  }[];
+  items: OrderItem[];
   total: number;
   status: OrderStatus;
   orderDate: string;

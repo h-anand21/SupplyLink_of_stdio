@@ -30,14 +30,16 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Star } from "lucide-react";
+import { Star, ShoppingCart } from "lucide-react";
 import type { Order, OrderStatus } from "@/lib/types";
+import { useCart } from "@/context/cart-context";
+import { mockProducts } from "@/lib/data";
 
-const mockOrders: Order[] = [
+const initialOrders: Order[] = [
     {
         id: "ORD001",
         vendorId: "vendor-1",
-        items: [{productId: "prod-1", productName: "Fresh Red Onions", quantity: 5, price: 15.99}],
+        items: [{...mockProducts[0], quantity: 5 }],
         total: 79.95,
         status: "Delivered",
         orderDate: "2023-10-20",
@@ -46,7 +48,7 @@ const mockOrders: Order[] = [
     {
         id: "ORD002",
         vendorId: "vendor-1",
-        items: [{productId: "prod-4", productName: "Idaho Potatoes", quantity: 10, price: 22.00}],
+        items: [{...mockProducts[3], quantity: 10 }],
         total: 220.00,
         status: "Shipped",
         orderDate: "2023-10-25",
@@ -55,8 +57,8 @@ const mockOrders: Order[] = [
         id: "ORD003",
         vendorId: "vendor-1",
         items: [
-            {productId: "prod-2", productName: "Premium Cooking Oil", quantity: 2, price: 45.50},
-            {productId: "prod-3", productName: "Organic All-Purpose Flour", quantity: 1, price: 25.00}
+            {...mockProducts[1], quantity: 2},
+            {...mockProducts[2], quantity: 1}
         ],
         total: 116.00,
         status: "Approved",
@@ -65,7 +67,7 @@ const mockOrders: Order[] = [
     {
         id: "ORD004",
         vendorId: "vendor-1",
-        items: [{productId: "prod-6", productName: "San Marzano Tomatoes", quantity: 3, price: 35.00}],
+        items: [{...mockProducts[5], quantity: 3}],
         total: 105.00,
         status: "Pending",
         orderDate: "2023-10-27",
@@ -82,17 +84,21 @@ const getStatusVariant = (status: OrderStatus) => {
         return "outline";
       case "Pending":
           return "destructive"
+      case "Draft":
+        return "secondary"
       default:
         return "secondary";
     }
 };
 
 export default function OrdersPage() {
+  const [orders, setOrders] = useState(initialOrders);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isRatingOpen, setIsRatingOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [reviewComment, setReviewComment] = useState("");
+  const { cartItems, clearCart } = useCart();
 
   const handleViewDetails = (order: Order) => {
     setSelectedOrder(order);
@@ -112,6 +118,19 @@ export default function OrdersPage() {
     setIsRatingOpen(false);
   }
 
+  const handlePlaceOrder = () => {
+    const newOrder: Order = {
+      id: `ORD${(Math.random() * 1000).toFixed(0).padStart(3, '0')}`,
+      vendorId: "vendor-1",
+      items: cartItems.map(item => ({...item, quantity: 1})), // Assuming quantity 1 for now
+      total: cartItems.reduce((acc, item) => acc + item.price, 0),
+      status: "Pending",
+      orderDate: new Date().toISOString().split('T')[0],
+    };
+    setOrders(prev => [newOrder, ...prev]);
+    clearCart();
+  }
+
   const renderStars = (currentRating: number, setRating?: (rating: number) => void) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
@@ -123,6 +142,17 @@ export default function OrdersPage() {
       />
     ));
   };
+  
+  const draftOrder: Order | null = cartItems.length > 0 ? {
+    id: "DRAFT-001",
+    vendorId: "vendor-1",
+    items: cartItems.map(item => ({ ...item, quantity: 1 })),
+    total: cartItems.reduce((acc, item) => acc + item.price, 0),
+    status: "Draft",
+    orderDate: new Date().toISOString().split('T')[0]
+  } : null;
+
+  const allOrders = draftOrder ? [draftOrder, ...orders] : orders;
 
   return (
     <>
@@ -134,39 +164,52 @@ export default function OrdersPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockOrders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell className="font-medium">{order.id}</TableCell>
-                  <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    <Badge variant={getStatusVariant(order.status)}>{order.status}</Badge>
-                  </TableCell>
-                  <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
-                  <TableCell className="text-right">
-                      <Button variant="outline" size="sm" onClick={() => handleViewDetails(order)}>
-                          View Details
-                      </Button>
-                      {order.status === 'Delivered' && (
-                          <Button variant="default" size="sm" className="ml-2" onClick={() => handleRateSupplier(order)}>
-                              Rate Supplier
-                          </Button>
-                      )}
-                  </TableCell>
+          {allOrders.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <ShoppingCart className="mx-auto h-12 w-12" />
+              <p className="mt-4">You haven't placed any orders yet.</p>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Order ID</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Total</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {allOrders.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell className="font-medium">{order.id}</TableCell>
+                    <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      <Badge variant={getStatusVariant(order.status)}>{order.status}</Badge>
+                    </TableCell>
+                    <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
+                    <TableCell className="text-right">
+                        {order.status === 'Draft' ? (
+                          <Button size="sm" onClick={handlePlaceOrder}>Place Order</Button>
+                        ) : (
+                          <>
+                            <Button variant="outline" size="sm" onClick={() => handleViewDetails(order)}>
+                                View Details
+                            </Button>
+                            {order.status === 'Delivered' && (
+                                <Button variant="default" size="sm" className="ml-2" onClick={() => handleRateSupplier(order)}>
+                                    Rate Supplier
+                                </Button>
+                            )}
+                          </>
+                        )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
 
@@ -206,8 +249,8 @@ export default function OrdersPage() {
                         </TableHeader>
                         <TableBody>
                             {selectedOrder.items.map(item => (
-                                <TableRow key={item.productId}>
-                                    <TableCell>{item.productName}</TableCell>
+                                <TableRow key={item.id}>
+                                    <TableCell>{item.name}</TableCell>
                                     <TableCell>{item.quantity}</TableCell>
                                     <TableCell className="text-right">${item.price.toFixed(2)}</TableCell>
                                     <TableCell className="text-right">${(item.quantity * item.price).toFixed(2)}</TableCell>
@@ -266,4 +309,3 @@ export default function OrdersPage() {
     </>
   );
 }
-
