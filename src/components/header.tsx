@@ -1,10 +1,10 @@
 
 "use client"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import {
   CircleUser,
   Menu,
-  Package2,
   Search,
 } from "lucide-react"
 
@@ -22,6 +22,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { SupplyLinkLogo } from "./icons"
 
 export function Header() {
+  const router = useRouter();
   // Mock user role. In a real app, this would come from an auth context.
   const userRole = 'vendor'; 
 
@@ -37,6 +38,10 @@ export function Header() {
   ];
 
   const navLinks = userRole === 'vendor' ? vendorLinks : supplierLinks;
+
+  const handleLogout = () => {
+    router.push('/login');
+  }
 
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-50">
@@ -116,7 +121,7 @@ export function Header() {
             </DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
