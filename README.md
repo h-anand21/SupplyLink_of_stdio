@@ -23,29 +23,33 @@ SupplyLink is a web-based platform designed to help street food vendors connect 
 - React *(Optional Enhancement)*
 
 ### Backend:
-- Python (Flask or Django)
+- NODE JS 
 - REST API Integration
 
 ### Database:
 - Firebase / PostgreSQL / MongoDB
 
 ### Hosting & DevOps:
-- Netlify / Vercel *(Frontend)*
-- Render / Heroku / Railway *(Backend)*
+- Netlify / Vercel *(Frontend)* *(Backend)*
 - GitHub for Version Control
 
 ---
 
-## 🔧 Getting Started
+### Deployment (TEST THE WEBSITE )
+       https://supplyli.netlify.app/
 
-### 1. Clone the Repository 
-      git clone https://github.com/h-anand21/SupplyLink_of_stdio.git
-### 2. MAKE .ENV FILE 
-       GEMINI_API_KEY = 
-### 3. RUN IN TERMINAL
+## 🔧 Getting Started in local host
+
+# 1. Clone the Repository 
+       https://github.com/h-anand21/SupplyLink_of_stdio.git
+# 2. GENERATE API KEY FROM GIVEN WEBSITE BELOW 
+      https://aistudio.google.com
+# 3. MAKE .ENV FILE 
+       GEMINI_API_KEY = "PASTE THE API KEY"
+# 4. RUN IN TERMINAL
       A. open the new terminal 
-      A. npm install
-      B. npm run dev
+      B. npm install
+      C. npm run dev
 
 
 
